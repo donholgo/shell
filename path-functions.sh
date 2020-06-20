@@ -21,7 +21,7 @@ path_remove() {
 path_append() {
   for dir; do
     path_remove "$dir"
-    PATH=$PATH:"$dir"
+    PATH="$PATH:$dir"
   done
 }
 
@@ -34,7 +34,7 @@ path_append_unless_present() {
 path_prepend() {
   for dir; do
     path_remove "$dir"
-    PATH="$dir":$PATH
+    PATH="$dir:$PATH"
   done
 }
 
