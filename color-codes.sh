@@ -1,3 +1,5 @@
+#!/bin/sh
+
 color_bgDefault='\e[49m'
 color_blink='\e[5m'
 color_bold='\e[1m'

@@ -4,6 +4,8 @@ use strict;
 use warnings;
 use File::Basename;
 
+print "#!/bin/sh\n\n";
+
 my %general = (
   'reset' => 0,
   'fgDefault' => 39,
