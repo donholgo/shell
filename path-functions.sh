@@ -13,6 +13,7 @@ path_remove() {
   for dir; do
     PATH=":$PATH:"
     PATH="${PATH//:$dir:/:}"
+    PATH="${PATH//:$dir:/:}"
     PATH="${PATH#:}"
     PATH="${PATH%:}"
   done
