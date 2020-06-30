@@ -1,0 +1,9 @@
+"\e<": " | less\n"
+"\e+": " &\n"
+
+"\el": "less "
+"\ew": unix-filename-rubout
+
+"\C-^": "../"
+"\C- ": "\\ "
+
