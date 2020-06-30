@@ -4,7 +4,13 @@ use strict;
 use warnings;
 use File::Basename;
 
-print "#!/bin/sh\n\n";
+print <<EOF;
+#!/bin/sh
+
+declare -A color
+declare -A pcolor
+
+EOF
 
 my %general = (
   'reset' => 0,
@@ -19,46 +25,48 @@ my %general = (
   'reverse' => 7,
   'resetReverse' => 27
 );
-my @color_variables;
+my @indices;
 foreach (sort keys %general) {
-  print "color_$_='\\e[$general{$_}m'\n";
-  push @color_variables, "color_$_";
+  print "color[$_]='\\e[$general{$_}m'\n";
+  push @indices, $_;
 }
 print "\n";
 
 my @color_names = ('black', 'red', 'green', 'yellow', 'blue', 'magenta', 'cyan', 'gray');
 for (my $i = 0; $i < @color_names; ++$i) {
   my $color_name = ucfirst $color_names[$i];
-  my $name_fg="color_fg${color_name}";
-  my $name_fgLight="color_fgLight${color_name}";
-  my $name_bg="color_bg${color_name}";
-  my $name_bgLight="color_bgLight${color_name}";
+  my $name_fg="fg${color_name}";
+  my $name_fgLight="fgLight${color_name}";
+  my $name_bg="bg${color_name}";
+  my $name_bgLight="bgLight${color_name}";
 
   # change Black/LightBlack and Gray/LightGray
   # to Black/DarkGray and LightGray/White
   if ($i == 0) {
-    $name_fgLight = "color_fgDarkGray";
-    $name_bgLight = "color_bgDarkGray";
+    $name_fgLight = "fgDarkGray";
+    $name_bgLight = "bgDarkGray";
   }
   if ($i == 7) {
-    $name_fg="color_fgLightGray";
-    $name_fgLight="color_fgWhite";
-    $name_bg="color_bgLightGray";
-    $name_bgLight="color_bgWhite";
+    $name_fg="fgLightGray";
+    $name_fgLight="fgWhite";
+    $name_bg="bgLightGray";
+    $name_bgLight="bgWhite";
   }
 
   print <<EOF;
-$name_fg='\\e[3${i}m'
-$name_fgLight='\\e[9${i}m'
-$name_bg='\\e[4${i}m'
-$name_bgLight='\\e[10${i}m'
+color[fg$i]='\\e[3${i}m'
+color[$name_fg]='\\e[3${i}m'
+color[$name_fgLight]='\\e[9${i}m'
+color[bg$i]='\\e[4${i}m'
+color[$name_bg]='\\e[4${i}m'
+color[$name_bgLight]='\\e[10${i}m'
+
 EOF
-  push @color_variables, $name_fg, $name_fgLight, $name_bg, $name_bgLight;
+  push @indices, $name_fg, $name_fgLight, $name_bg, $name_bgLight, "fg$i", "bg$i";
 }
 
-print "\n";
 print "# prompt colors: color codes wrapped in \\[...\\] for use in PS1 etc.\n";
 
-foreach my $color_variable (@color_variables) {
-  print "p$color_variable=\"\\[\$$color_variable\\]\"\n";
+foreach my $index (sort @indices) {
+  print "pcolor[$index]=\"\\[\${color[$index]}\\]\"\n";
 }
