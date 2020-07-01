@@ -2,6 +2,7 @@
 "\e+": " &\n"
 
 "\el": "less "
+"\en": "/dev/null"
 "\ew": unix-filename-rubout
 
 "\C-^": "../"
