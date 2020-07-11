@@ -27,7 +27,10 @@ up() {
       return 1
     fi
   fi
-  while (( levels-- > 0 )); do
-    cd ..
+
+  local dir=""
+  while (( levels-- )); do
+    dir="../$dir"
   done
+  [[ -n $dir ]] && cd "$dir"
 }
