@@ -34,3 +34,10 @@ up() {
   done
   [[ -n $dir ]] && cd "$dir"
 }
+
+xo() {
+  for file; do
+    xdg-open "$file"
+  done
+}
+
