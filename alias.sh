@@ -7,7 +7,6 @@ alias df.='df -H .'
 alias ll='ls -l'
 alias md='mkdir'
 alias vip='vi -p'
-alias vir='vi -R -'
 
 mcd() {
   if [[ $# -eq 1 ]]; then
@@ -35,6 +34,15 @@ up() {
   done
   [[ -n $dir ]] && cd "$dir"
 }
+
+vir() {
+  if [[ $# -eq 0 ]]; then
+    vi -R -
+  else
+    vi -Rp "$@"
+  fi
+}
+
 
 xo() {
   for file; do
