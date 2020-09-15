@@ -1,8 +1,9 @@
 "\e<": " | less\n"
 "\e+": " &\n"
 
+"\ed": "/dev/null"
 "\el": "less "
-"\en": "/dev/null"
+"\en": '"$(newest)"'
 "\ew": unix-filename-rubout
 
 "\C-^": "../"
