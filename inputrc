@@ -3,7 +3,7 @@
 
 "\ed": "/dev/null"
 "\el": "less "
-"\en": '"$(newest)"'
+"\en": '"$(newest )"'
 "\ew": unix-filename-rubout
 
 "\C-^": "../"
