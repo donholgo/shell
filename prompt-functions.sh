@@ -1,4 +1,4 @@
-# shell functions to manipluate PS1:
+# shell functions to manipulate PS1:
 # switch between \w and \W, set PROMPT_DIRTRIM
 
 hide-path() {
