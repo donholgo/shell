@@ -3,6 +3,7 @@ alias ...='cd ../..'
 alias 664='chmod 664'
 alias 775='chmod 775'
 alias 775+664='find . -type d -exec chmod 775 {} + ; find . -type f -exec chmod 664 {} +'
+alias apt-all='sudo apt update && sudo apt upgrade && sudo apt autoremove && sudo apt clean'
 alias dfh='df -H'
 alias dussi='du -s --si'
 alias l=less
