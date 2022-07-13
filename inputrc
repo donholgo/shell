@@ -9,3 +9,15 @@
 "\C-^": "../"
 "\C- ": "\\ "
 
+# Make Tab cycle between possible completions
+# Cycle forward: Tab
+# Cycle backward: Shift-Tab
+TAB: menu-complete
+"\e[Z": menu-complete-backward
+
+# Perform partial (common) completion on the first Tab press, only start
+# cycling full results on the second Tab press (from bash version 5)
+set menu-complete-display-prefix on
+
+set show-all-if-ambiguous on
+set menu-complete-display-prefix on
