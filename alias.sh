@@ -24,7 +24,7 @@ mcd() {
 }
 
 up() {
-  levels=1
+  local levels=1
   if [[ $# -ne 0 ]]; then
     if [[ $1 =~ ^[0-9]+$ ]]; then
       levels=$1
@@ -56,3 +56,19 @@ xo() {
   done
 }
 
+inc() {
+  local increment=${1:-1}
+  local here=$(pwd)
+  local base=""
+  local number=$here
+  if [[ $here =~ ^(.*[^0-9])([0-9]+)$ ]]; then
+    base=${BASH_REMATCH[1]}
+    number=${BASH_REMATCH[2]}
+  fi
+  cd "$base$(( number + increment ))"
+}
+
+dec() {
+  local decrement=${1:-1}
+  inc "-$decrement"
+}
