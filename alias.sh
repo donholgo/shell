@@ -72,3 +72,8 @@ dec() {
   local decrement=${1:-1}
   inc "-$decrement"
 }
+
+strlen() {
+  echo ${#1}
+}
+
