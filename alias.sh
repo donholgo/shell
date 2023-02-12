@@ -3,7 +3,7 @@ alias ...='cd ../..'
 alias 664='chmod 664'
 alias 775='chmod 775'
 alias 775+664='find . -type d -exec chmod 775 {} + ; find . -type f -exec chmod 664 {} +'
-alias apt-all='sudo apt update && sudo apt upgrade && sudo apt autoremove && sudo apt clean'
+alias apt-all='sudo bash -c "apt update && apt upgrade && apt autoremove && apt clean"'
 alias dfh='df -H'
 alias dussi='du -s --si'
 alias l=less
@@ -67,6 +67,7 @@ inc() {
   fi
   cd "$base$(( number + increment ))"
 }
+alias cd+=inc
 
 dec() {
   local decrement=${1:-1}
@@ -77,3 +78,12 @@ strlen() {
   echo ${#1}
 }
 
+cd#() {
+  local target=${1:-1}
+  local here=$(pwd)
+  local base=""
+  if [[ $here =~ ^(.*[^0-9])([0-9]+)$ ]]; then
+    base=${BASH_REMATCH[1]}
+  fi
+  cd "$base$target"
+}
