@@ -78,6 +78,26 @@ strlen() {
   echo ${#1}
 }
 
+# cd to "sibling" directory
+cdsib() {
+  if (( $# != 1 )); then
+    echo >&2 "${FUNCNAME[0]}: exactly one argument required."
+    return
+  fi
+  local suffix=$1
+  local current=$(basename -- "$(pwd)")
+  while [[ -n $current ]]; do
+    current=${current:0:-1}
+    sibling="../${current}${suffix}"
+    if [[ -d $sibling ]]; then
+      cd "$sibling"
+      return
+    fi
+  done
+  echo >&2 "${FUNCNAME[0]}: no sibling directory with suffix '${suffix}' found."
+}
+
+
 cd#() {
   local target=${1:-1}
   local here=$(pwd)
