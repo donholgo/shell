@@ -1,4 +1,4 @@
-alias ..='cd ..'
+alias ..=up
 alias ...='cd ../..'
 alias 664='chmod 664'
 alias 775='chmod 775'
@@ -78,12 +78,44 @@ strlen() {
   echo ${#1}
 }
 
-cd#() {
-  local target=${1:-1}
-  local here=$(pwd)
-  local base=""
-  if [[ $here =~ ^(.*[^0-9])([0-9]+)$ ]]; then
-    base=${BASH_REMATCH[1]}
+# cd with some extended functionality
+_hwcd() {
+  # If there is no argument or if the first
+  # argument starts with a '-', call the
+  # builtin.
+  if [ $# -eq 0 ] || [[ "$1" == -* ]]; then
+    builtin cd "$@"
+
+  # If there is *one* argument and it's a *file*,
+  # switch to the parent directory.
+  elif [ $# -eq 1 ] && [ -f "$1" ]; then
+    builtin cd "$(dirname -- "$1")"
+
+  # If there is one argument which
+  #   - is a relative path
+  #   - and does not exist in $PWD,
+  # try to find it under the parent, grandparent
+  # etc. directory.
+  elif [ $# -eq 1 ] && [[ "$1" != /* ]] && [ ! -e "$1" ]; then
+    parent=$PWD
+    until [ -z "$parent" ]; do
+      parent=$(dirname -- "$parent")
+      [ "$parent" == '/' ] && parent=''
+      if [ -e "$parent/$1" ]; then
+        builtin cd "$parent/$1"
+        break
+      fi
+    done
+
+  # With two arguments, replace (the first occurrence of) $1
+  # with $2 in $PWD.
+  elif [ $# -eq 2 ]; then
+    builtin cd "${PWD/$1/$2}"
+
+  # In any other case, call the builtin.
+  else
+    builtin cd "$@"
   fi
-  cd "$base$target"
 }
+
+alias cd=_hwcd
