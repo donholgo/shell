@@ -80,42 +80,50 @@ strlen() {
 
 # cd with some extended functionality
 _hwcd() {
-  # If there is no argument or if the first
-  # argument starts with a '-', call the
-  # builtin.
-  if [ $# -eq 0 ] || [[ "$1" == -* ]]; then
-    builtin cd "$@"
 
-  # If there is *one* argument and it's a *file*,
-  # switch to the parent directory.
-  elif [ $# -eq 1 ] && [ -f "$1" ]; then
-    builtin cd "$(dirname -- "$1")"
+  # One argument
+  if [ $# -eq 1 ]; then
 
-  # If there is one argument which
-  #   - is a relative path
-  #   - and does not exist in $PWD,
-  # try to find it under the parent, grandparent
-  # etc. directory.
-  elif [ $# -eq 1 ] && [[ "$1" != /* ]] && [ ! -e "$1" ]; then
-    parent=$PWD
-    until [ -z "$parent" ]; do
-      parent=$(dirname -- "$parent")
-      [ "$parent" == '/' ] && parent=''
-      if [ -e "$parent/$1" ]; then
-        builtin cd "$parent/$1"
-        break
-      fi
-    done
+    # If it starts with '-', call the builtin
+    # (no need to implement option handling here).
+    if [[ "$1" == -* ]]; then
+      builtin cd "$@"
+      return
+    fi
 
-  # With two arguments, replace (the first occurrence of) $1
+    # If the argument is a *file*,
+    # cd to the parent directory.
+    if [ -f "$1" ]; then
+      builtin cd "$(dirname -- "$1")"
+      return
+    fi
+
+    # If the argument
+    #   - is a relative path
+    #   - and does not exist in $PWD,
+    # try to find it under the parent, grandparent
+    # etc. directory.
+    if [[ "$1" != /* ]] && [ ! -e "$1" ]; then
+      parent=$PWD
+      until [ -z "$parent" ]; do
+        parent=$(dirname -- "$parent")
+        [ "$parent" == '/' ] && parent=''
+        if [ -e "$parent/$1" ]; then
+          builtin cd "$parent/$1"
+          return
+        fi
+      done
+    fi
+
+  # Two arguments: replace (the first occurrence of) $1
   # with $2 in $PWD.
   elif [ $# -eq 2 ]; then
     builtin cd "${PWD/$1/$2}"
-
-  # In any other case, call the builtin.
-  else
-    builtin cd "$@"
+    return
   fi
+
+  # Default behavior: call the builtin.
+  builtin cd "$@"
 }
 
 alias cd=_hwcd
