@@ -93,6 +93,7 @@ strlen() {
 
 # cd with some extended functionality
 _hwcd() {
+  local targetdir
 
   # One argument
   if [ $# -eq 1 ]; then
@@ -107,7 +108,9 @@ _hwcd() {
     # If the argument is a *file*,
     # cd to the parent directory.
     if [ -f "$1" ]; then
-      builtin cd "$(dirname -- "$1")"
+      targetdir=$(dirname -- "$1")
+      printf '%s\n' "$targetdir"
+      builtin cd "$targetdir"
       return
     fi
 
@@ -120,9 +123,11 @@ _hwcd() {
       local parent=$PWD
       until [ -z "$parent" ]; do
         parent=$(dirname -- "$parent")
-        [ "$parent" == '/' ] && parent=''
-        if [ -e "$parent/$1" ]; then
-          builtin cd "$parent/$1"
+        [ "$parent" = '/' ] && parent=''
+        targetdir="$parent/$1"
+        if [ -e "$targetdir" ]; then
+          printf '%s\n' "$targetdir"
+          builtin cd "$targetdir"
           return
         fi
       done
@@ -131,7 +136,9 @@ _hwcd() {
   # Two arguments: replace (the first occurrence of) $1
   # with $2 in $PWD.
   elif [ $# -eq 2 ]; then
-    builtin cd "${PWD/$1/$2}"
+    targetdir=${PWD/$1/$2}
+    printf '%s\n' "$targetdir"
+    builtin cd "$targetdir"
     return
   fi
 
