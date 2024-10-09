@@ -14,6 +14,19 @@ alias rp='realpath'
 alias vip='vi -p'
 alias xon='xdg-open "$(newest)"'
 
+type2vi() {
+  if [ $# -ne 1 ]; then
+    echo >&2 "Exactly one argument must be given."
+    return 1
+  fi
+  local file=$(type -p "$1")
+  if [ -n "$file" ]; then
+    vi "$file"
+  else
+    type "$1"
+  fi
+}
+
 mcd() {
   if [[ $# -eq 1 ]]; then
     mkdir -p "$1" && cd "$1"
@@ -104,7 +117,7 @@ _hwcd() {
     # try to find it under the parent, grandparent
     # etc. directory.
     if [[ "$1" != /* ]] && [ ! -e "$1" ]; then
-      parent=$PWD
+      local parent=$PWD
       until [ -z "$parent" ]; do
         parent=$(dirname -- "$parent")
         [ "$parent" == '/' ] && parent=''
