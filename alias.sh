@@ -115,11 +115,11 @@ _hwcd() {
     fi
 
     # If the argument
-    #   - is a relative path
+    #   - is a relative path (not containing '.' or '..')
     #   - and does not exist in $PWD,
     # try to find it under the parent, grandparent
     # etc. directory.
-    if [[ "$1" != /* ]] && [ ! -e "$1" ]; then
+    if [[ "$1" != /* ]] && ! [[ "$1" =~ (^|/)\.\.?(/|$) ]] && [ ! -e "$1" ]; then
       local parent=$PWD
       until [ -z "$parent" ]; do
         parent=$(dirname -- "$parent")
@@ -131,6 +131,24 @@ _hwcd() {
           return
         fi
       done
+    fi
+
+    # If
+    #   - $1 is numeric (meaning [0-9]+),
+    #   - the current directory has a name of the form PREFIX-NNN with numeric NNN
+    #   - and there is a sibling directory PREFIX-$1,
+    # change into that sibling directory.
+    integer_re='^[0-9]+$'
+    if [[ "$1" =~ $integer_re ]]; then
+      local base=$(basename -- "$PWD")
+      local prefix=${base%-*}
+      local suffix=${base##*-}
+      targetdir="../${prefix}-${1}"
+      if [[ $suffix =~ $integer_re ]] && [[ -d "$targetdir" ]]; then
+        printf '%s\n' "$targetdir"
+        builtin cd "$targetdir"
+        return
+      fi
     fi
 
   # Two arguments: replace (the first occurrence of) $1
