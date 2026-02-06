@@ -4,12 +4,15 @@ alias 664='chmod 664'
 alias 775='chmod 775'
 alias 775+664='find . -type d -exec chmod 775 {} + ; find . -type f -exec chmod 664 {} +'
 alias apt-all='sudo bash -c "apt update && apt upgrade && apt autoremove --purge -y && apt clean"'
+alias brc=". ~/.bashrc"
 alias dfh='df -H'
 alias dussi='du -s --si'
+alias gq='geeqie . &'
 alias l=less
 alias ll='ls -l'
 alias lr='ls -ltr'
 alias md='mkdir'
+alias rename="rename -v"
 alias rp='realpath'
 alias vip='vi -p'
 alias xon='xdg-open "$(newest)"'
@@ -59,6 +62,14 @@ vir() {
     vi -R -
   else
     vi -Rp "$@"
+  fi
+}
+
+virj() {
+  if [[ $# -eq 0 ]]; then
+    vi -R -c 'set filetype=json' -
+  else
+    vi -Rp -c 'set filetype=json' "$@"
   fi
 }
 
