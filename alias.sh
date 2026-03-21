@@ -3,7 +3,6 @@ alias ...='cd ../..'
 alias 664='chmod 664'
 alias 775='chmod 775'
 alias 775+664='find . -type d -exec chmod 775 {} + ; find . -type f -exec chmod 664 {} +'
-alias apt-all='sudo bash -c "apt update && apt upgrade && apt autoremove --purge -y && apt clean"'
 alias brc=". ~/.bashrc"
 alias dfh='df -H'
 alias dussi='du -s --si'
