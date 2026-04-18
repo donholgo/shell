@@ -175,3 +175,35 @@ _hwcd() {
 }
 
 alias cd=_hwcd
+
+
+# clipboard
+alias clipboard-read='xsel --input --clipboard'
+alias clipboard-write='xsel --output --clipboard'
+
+
+clipboard-read-from-file() {
+  if [ $# -ne 1 ]; then
+    echo >&2 "Usage: $0 <file>"
+    return 1
+  fi
+  file=$1
+  if ! [[ -f $file ]]; then
+    echo >&2 "No file '${file}'."
+    return 2
+  fi
+  xsel --input --clipboard <"$file"
+}
+
+clipboard-write-to-file() {
+  if [ $# -ne 1 ]; then
+    echo >&2 "Usage: $0 <file>"
+    return 1
+  fi
+  file=$1
+  if ! [[ -f $file ]]; then
+    echo >&2 "No file '${file}'."
+    return 2
+  fi
+  xsel --output --clipboard >"$file"
+}
